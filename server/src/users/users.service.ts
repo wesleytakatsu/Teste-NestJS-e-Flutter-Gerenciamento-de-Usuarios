@@ -8,6 +8,20 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
+    // Check if email already exists
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: createUserDto.email },
+    });
+    if (existingUser) {
+      throw new Error('Email already exists');
+    }
+
+    // Hash password if provided
+    if (createUserDto.password) {
+      const bcrypt = require('bcrypt');
+      createUserDto.password = await bcrypt.hash(createUserDto.password, 10);
+    }
+
     return this.prisma.user.create({ data: createUserDto });
   }
 
@@ -15,7 +29,7 @@ export class UsersService {
     const { role, sortBy, order, name } = query;
     const where: any = {};
     if (role) where.role = role;
-    if (name) where.name = { contains: name, mode: 'insensitive' };
+    if (name) where.name = { contains: name };
 
     const orderBy: any = {};
     if (sortBy) {
@@ -44,7 +58,10 @@ export class UsersService {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     return this.prisma.user.findMany({
       where: {
-        updatedAt: { lt: thirtyDaysAgo },
+        OR: [
+          { lastLogin: null },
+          { lastLogin: { lt: thirtyDaysAgo } },
+        ],
       },
     });
   }

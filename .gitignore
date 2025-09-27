@@ -62,3 +62,10 @@ migrate_working_dir/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+server/nohup.out
+server/API_DOCS.md
+server/package-lock.json
+server/SWAGGER_AUTH_GUIDE.md
+server/SWAGGER_STEP_BY_STEP.md
+server/SWAGGER_GUIDE.md
+server/test-api.sh

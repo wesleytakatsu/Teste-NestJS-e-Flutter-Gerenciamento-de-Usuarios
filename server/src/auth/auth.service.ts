@@ -13,6 +13,14 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
+    // Check if email already exists
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: registerDto.email },
+    });
+    if (existingUser) {
+      throw new UnauthorizedException('Email already exists');
+    }
+
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
     const user = await this.prisma.user.create({
       data: {
@@ -37,6 +45,11 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
+    // Update lastLogin
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { lastLogin: new Date() },
+    });
     const payload = { email: user.email, sub: user.id, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
