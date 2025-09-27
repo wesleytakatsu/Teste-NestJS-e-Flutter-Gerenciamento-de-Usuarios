@@ -19,7 +19,8 @@ class UsersController extends GetxController {
       var fetchedUsers = await _usersService.fetchUsers(role: role, name: name);
       users.assignAll(fetchedUsers);
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch users');
+      print('Erro ao buscar usuários: $e');
+      // Remover snackbar problemático
     } finally {
       isLoading.value = false;
     }
@@ -30,7 +31,7 @@ class UsersController extends GetxController {
       await _usersService.createUser(user);
       fetchUsers();
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create user');
+      print('Erro ao criar usuário: $e');
     }
   }
 
@@ -39,7 +40,7 @@ class UsersController extends GetxController {
       await _usersService.updateUser(id, user);
       fetchUsers();
     } catch (e) {
-      Get.snackbar('Error', 'Failed to update user');
+      print('Erro ao atualizar usuário: $e');
     }
   }
 
@@ -48,7 +49,7 @@ class UsersController extends GetxController {
       await _usersService.deleteUser(id);
       fetchUsers();
     } catch (e) {
-      Get.snackbar('Error', 'Failed to delete user');
+      print('Erro ao deletar usuário: $e');
     }
   }
 }

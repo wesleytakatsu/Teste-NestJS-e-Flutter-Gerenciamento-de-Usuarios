@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import '../views/login_view.dart';
+import '../views/home_view.dart';
 import '../views/users_list_view.dart';
 import '../views/user_form_view.dart';
 import '../views/profile_view.dart';
@@ -9,6 +10,10 @@ class AppRoutes {
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginView(),
+    ),
+    GoRoute(
+      path: '/home',
+      builder: (context, state) => const HomeView(),
     ),
     GoRoute(
       path: '/users',
